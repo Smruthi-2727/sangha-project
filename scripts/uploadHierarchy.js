@@ -108,7 +108,7 @@ async function upload() {
   });
 
   // -----------------------------
-  // 3️⃣ Insert new entities
+  // 3️⃣Insert new entities
   // -----------------------------
   if (newEntities.length > 0) {
     const insertedEntities = await Entity.insertMany(newEntities, { ordered: false });
@@ -119,7 +119,7 @@ async function upload() {
   }
 
   // -----------------------------
-  // 4️⃣ Insert ParentEntity links
+  // 4️ Insert ParentEntity links
   // -----------------------------
   const parentLinks = Array.from(parentLinksSet).map((key) => {
     const [childName, parentName, childStharaId, parentStharaId] = key.split("_");
@@ -132,8 +132,9 @@ async function upload() {
     await ParentEntity.insertMany(parentLinks, { ordered: false });
   }
 
-  console.log("✅ Hierarchy uploaded successfully!");
+  console.log(" Hierarchy uploaded successfully!");
   process.exit();
 }
 
 upload();
+
