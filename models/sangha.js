@@ -2,22 +2,20 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const stharaSchema = new Schema({
-  name: { type: String, unique: true }
+  name: String,
 });
 
-const Sthara = mongoose.model("stharas", stharaSchema);
+const Sthara = mongoose.models.stharas || mongoose.model("stharas", stharaSchema);
 
 const entitySchema = new Schema({
   name: String,
   sthara: {
     type: mongoose.Schema.Types.ObjectId,
     ref: Sthara,
-  }
+  },
 });
 
-entitySchema.index({ name: 1, sthara: 1 }, { unique: true });
-
-const Entity = mongoose.model("entities", entitySchema);
+const Entity = mongoose.models.entities || mongoose.model("entities", entitySchema);
 
 const parentEntitySchema = new Schema({
   currentEntity: {
@@ -30,7 +28,9 @@ const parentEntitySchema = new Schema({
   },
 });
 
-const ParentEntity = mongoose.model("parentEntities", parentEntitySchema);
+const ParentEntity =
+  mongoose.models.parentEntities ||
+  mongoose.model("parentEntities", parentEntitySchema);
 
 const cashSchema = new Schema({
   denomination: Number,
@@ -38,7 +38,7 @@ const cashSchema = new Schema({
   type: String,
 });
 
-const Cash = mongoose.model("cashDenominations", cashSchema);
+const Cash = mongoose.models.cashDenominations || mongoose.model("cashDenominations", cashSchema);
 
 const denominationSchema = new Schema(
   {
@@ -48,7 +48,7 @@ const denominationSchema = new Schema(
   { timestamps: true }
 );
 
-const Denomination = mongoose.model("denominations", denominationSchema);
+const Denomination = mongoose.models.denominations || mongoose.model("denominations", denominationSchema);
 
 const denominationAmountSchema = new Schema({
   value: Number,
@@ -56,10 +56,7 @@ const denominationAmountSchema = new Schema({
   quantity: Number,
 });
 
-const DenominationAmount = mongoose.model(
-  "denominationAmounts",
-  denominationAmountSchema
-);
+const DenominationAmount = mongoose.models.denominationAmounts || mongoose.model("denominationAmounts", denominationAmountSchema);
 
 const dravyaSchema = new Schema(
   {
@@ -73,7 +70,7 @@ const dravyaSchema = new Schema(
   { timestamps: true }
 );
 
-const Dravya = mongoose.model("dravyas", dravyaSchema);
+const Dravya = mongoose.models.dravyas || mongoose.model("dravyas", dravyaSchema);
 
 const arpanaChequeSchema = new Schema(
   {
@@ -84,7 +81,7 @@ const arpanaChequeSchema = new Schema(
   { timestamps: true }
 );
 
-const ArpanaCheque = mongoose.model("arpanaCheques", arpanaChequeSchema);
+const ArpanaCheque = mongoose.models.arpanaCheques || mongoose.model("arpanaCheques", arpanaChequeSchema);
 
 const SamarpanaChequeSchema = new Schema(
   {
@@ -96,10 +93,7 @@ const SamarpanaChequeSchema = new Schema(
   { timestamps: true }
 );
 
-const SamarpanaCheque = mongoose.model(
-  "samarpanaCheques",
-  SamarpanaChequeSchema
-);
+const SamarpanaCheque = mongoose.models.samarpanaCheques || mongoose.model("samarpanaCheques", SamarpanaChequeSchema);
 
 const arpanaCashSchema = new Schema(
   {
@@ -113,7 +107,7 @@ const arpanaCashSchema = new Schema(
   { timestamps: true }
 );
 
-const ArpanaCash = mongoose.model("arpanaCashes", arpanaCashSchema);
+const ArpanaCash = mongoose.models.arpanaCashes || mongoose.model("arpanaCashes", arpanaCashSchema);
 
 const arpanaSchema = new Schema({
   sangraha: {
@@ -132,7 +126,7 @@ const arpanaSchema = new Schema({
   },
 });
 
-const Arpana = mongoose.model("arpana", arpanaSchema);
+const Arpana = mongoose.models.arpana || mongoose.model("arpana", arpanaSchema);
 
 const addressSchema = new Schema(
   {
@@ -149,7 +143,7 @@ const addressSchema = new Schema(
   { timestamps: true }
 );
 
-const Address = mongoose.model("locations", addressSchema);
+const Address = mongoose.models.locations || mongoose.model("locations", addressSchema);
 
 const participantSchema = new Schema({
   name: String,
@@ -171,7 +165,7 @@ const participantSchema = new Schema({
   },
 });
 
-const Participant = mongoose.model("participants", participantSchema);
+const Participant = mongoose.models.participants || mongoose.model("participants", participantSchema);
 
 const ssDataSchema = new Schema(
   {
@@ -192,12 +186,12 @@ const ssDataSchema = new Schema(
     profession: String,
     otherProfession: String,
     job: String,
-    dob: String,
+    dob: Number,
   },
   { timestamps: true }
 );
 
-const SSData = mongoose.model("ssdata", ssDataSchema);
+const SSData = mongoose.models.ssdata || mongoose.model("ssdata", ssDataSchema);
 
 const sanghDataSchema = new Schema(
   {
@@ -250,7 +244,7 @@ const sanghDataSchema = new Schema(
   { timestamps: true }
 );
 
-const SanghData = mongoose.model("sanghdata", sanghDataSchema);
+const SanghData = mongoose.models.sanghdata || mongoose.model("sanghdata", sanghDataSchema);
 
 const futureTargetSchema = new Schema({
   targetParticipant: Number,
@@ -262,7 +256,7 @@ const futureTargetSchema = new Schema({
   event: String,
 });
 
-const FutureTarget = mongoose.model("goals2024", futureTargetSchema);
+const FutureTarget = mongoose.models.goals2024 || mongoose.model("goals2024", futureTargetSchema);
 
 const sgpuEventSchema = new Schema({
   name: String,
@@ -301,7 +295,7 @@ const sgpuEventSchema = new Schema({
   },
 });
 
-const SGPUEvent = mongoose.model("sgpuevents", sgpuEventSchema);
+const SGPUEvent = mongoose.models.sgpuevents || mongoose.model("sgpuevents", sgpuEventSchema);
 
 const sgpUtsavSchema = new Schema(
   {
@@ -364,7 +358,7 @@ const sgpUtsavSchema = new Schema(
   { timestamps: true }
 );
 
-const SGPUtsav = mongoose.model("sgputsavs", sgpUtsavSchema);
+const SGPUtsav = mongoose.models.sgputsavs || mongoose.model("sgputsavs", sgpUtsavSchema);
 
 const goalsSchema = new Schema(
   {
@@ -382,7 +376,7 @@ const goalsSchema = new Schema(
   { timestamps: true }
 );
 
-const Goals = mongoose.model("goals", goalsSchema);
+const Goals = mongoose.models.goals || mongoose.model("goals", goalsSchema);
 
 const utsavVaradiSchema = new Schema(
   {
@@ -432,7 +426,7 @@ const utsavVaradiSchema = new Schema(
   { timestamps: true }
 );
 
-const UtsavVaradi = mongoose.model("utsavvaradis", utsavVaradiSchema);
+const UtsavVaradi = mongoose.models.utsavvaradis || mongoose.model("utsavvaradis", utsavVaradiSchema);
 
 const samarpanSchema = new Schema(
   {
@@ -467,7 +461,7 @@ const samarpanSchema = new Schema(
   { timestamps: true }
 );
 
-const Samarpan = mongoose.model("samarpans", samarpanSchema);
+const Samarpan = mongoose.models.samarpans || mongoose.model("samarpans", samarpanSchema);
 
 const sanghVargSchema = new Schema(
   {
@@ -476,7 +470,7 @@ const sanghVargSchema = new Schema(
   { timestamps: true }
 );
 
-const SanghVarg = mongoose.model("sanghvargs", sanghVargSchema);
+const SanghVarg = mongoose.models.sanghvargs || mongoose.model("sanghvargs", sanghVargSchema);
 
 const vargRegistrationSchema = new Schema(
   {
@@ -503,10 +497,7 @@ const vargRegistrationSchema = new Schema(
   { timestamps: true }
 );
 
-const VargRegistration = mongoose.model(
-  "vargRegistrations",
-  vargRegistrationSchema
-);
+const VargRegistration = mongoose.models.vargRegistrations || mongoose.model("vargRegistrations", vargRegistrationSchema);
 
 const eventSchema = new Schema(
   {
@@ -551,7 +542,7 @@ const eventSchema = new Schema(
   { timestamps: true }
 );
 
-const Event = mongoose.model("events", eventSchema);
+const Event = mongoose.models.events || mongoose.model("events", eventSchema);
 
 const eventRegistrationSchema = new Schema(
   {
@@ -569,10 +560,7 @@ const eventRegistrationSchema = new Schema(
   },
   { timestamps: true }
 );
-const EventRegistration = mongoose.model(
-  "eventRegistrations",
-  eventRegistrationSchema
-);
+const EventRegistration = mongoose.models.eventRegistrations || mongoose.model("eventRegistrations", eventRegistrationSchema);
 
 module.exports = {
   Sthara,
