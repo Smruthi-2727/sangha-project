@@ -66,6 +66,10 @@ export default function AddSSDetails() {
   const selectedEducation = watch("education");
   const selectedProfession = watch("profession");
   const selectedSanghResponsibility = watch("sanghaResponsibility");
+  const selectedVibhag = watch("vibhag");
+const selectedBhag = watch("bhag");
+const selectedNagar = watch("nagar");
+const selectedVasati = watch("vasati");
 
   const [vibhags, setVibhags] = useState([]);
   const [bhags, setBhags] = useState([]);
@@ -73,25 +77,96 @@ export default function AddSSDetails() {
   const [vasatis, setVasatis] = useState([]);
   const [upavasatis, setUpavasatis] = useState([]);
 
-  useEffect(() => {
-    async function loadData(sthara, setter) {
-      try {
-        const res = await fetch(`/api/entities?sthara=${sthara}`);
-        const data = await res.json();
-        setter(data);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
+ // Load only Vibhag initially
+useEffect(() => {
+  async function loadVibhags() {
+    try {
+      const res = await fetch(`/api/entities?sthara=Vibhag`);
+      const data = await res.json();
+      setVibhags(data);
+    } catch (error) {
+      console.error("Error loading vibhags:", error);
     }
+  }
 
-    loadData("Vibhag", setVibhags);
-    loadData("Bhag", setBhags);
-    loadData("Taluku", setNagars);
-    loadData("Mandala", setVasatis);
-    loadData("Grama", setUpavasatis);
-  }, []);
+  loadVibhags();
+}, []);
 
-  
+
+// Load Bhags when Vibhag changes
+useEffect(() => {
+  if (!selectedVibhag) {
+    setBhags([]);
+    return;
+  }
+
+  async function loadBhags() {
+    const res = await fetch(
+      `/api/entities?sthara=Bhag&parent=${selectedVibhag}`
+    );
+    const data = await res.json();
+    setBhags(data);
+  }
+
+  loadBhags();
+}, [selectedVibhag]);
+
+
+// Load Nagars when Bhag changes
+useEffect(() => {
+  if (!selectedBhag) {
+    setNagars([]);
+    return;
+  }
+
+  async function loadNagars() {
+    const res = await fetch(
+      `/api/entities?sthara=Taluku&parent=${selectedBhag}`
+    );
+    const data = await res.json();
+    setNagars(data);
+  }
+
+  loadNagars();
+}, [selectedBhag]);
+
+
+// Load Vasatis when Nagar changes
+useEffect(() => {
+  if (!selectedNagar) {
+    setVasatis([]);
+    return;
+  }
+
+  async function loadVasatis() {
+    const res = await fetch(
+      `/api/entities?sthara=Mandala&parent=${selectedNagar}`
+    );
+    const data = await res.json();
+    setVasatis(data);
+  }
+
+  loadVasatis();
+}, [selectedNagar]);
+
+
+// Load Upavasatis when Vasati changes
+useEffect(() => {
+  if (!selectedVasati) {
+    setUpavasatis([]);
+    return;
+  }
+
+  async function loadUpavasatis() {
+    const res = await fetch(
+      `/api/entities?sthara=Grama&parent=${selectedVasati}`
+    );
+    const data = await res.json();
+    setUpavasatis(data);
+  }
+
+  loadUpavasatis();
+}, [selectedVasati]);
 
   const sanghaShikshana = [
     "ಪ್ರಾರಂಭಿಕ ವರ್ಗ / Prarambhik Varga",
@@ -272,7 +347,7 @@ export default function AddSSDetails() {
                   id="bhag" 
                   labelId="bhag-label"
                   variant="standard" 
-                  disabled={!bhags?.length}
+                  disabled={!selectedVibhag}
                   style={{ width: "90%" }} 
                   sx={{ m: 1 }}
                   displayEmpty
@@ -306,7 +381,7 @@ export default function AddSSDetails() {
                   id="nagar" 
                   labelId="nagar-label"
                   variant="standard" 
-                  disabled={!nagars?.length}
+                  disabled={!selectedBhag}
                   style={{ width: "90%" }} 
                   sx={{ m: 1 }}
                   displayEmpty
@@ -340,7 +415,7 @@ export default function AddSSDetails() {
                   id="vasati" 
                   labelId="vasati-label"
                   variant="standard" 
-                  disabled={!vasatis?.length}
+                  disabled={!selectedNagar}
                   style={{ width: "90%" }} 
                   sx={{ m: 1 }}
                   displayEmpty
@@ -374,7 +449,7 @@ export default function AddSSDetails() {
                   id="upavasati" 
                   labelId="upavasati-label"
                   variant="standard" 
-                  disabled={!upavasatis?.length}
+                  disabled={!selectedVasati}
                   style={{ width: "90%" }} 
                   sx={{ m: 1 }}
                   displayEmpty
@@ -408,7 +483,7 @@ export default function AddSSDetails() {
           <div style={{ width: "90%", fontSize: "0.8rem", color: "red", marginLeft: "16px" }}>{errors.phone?.message}</div>
 
           
-          {/* EMAIL OPTION */}
+          
 {/* EMAIL OPTION */}
 <Controller
   name="emailOption"
@@ -504,7 +579,7 @@ export default function AddSSDetails() {
   placeholder="Paste Google Maps location link"
   {...register("locationUrl", {
     validate: (value) => {
-      if (!value) return true; // optional field
+      if (!value) return true; 
       try {
         new URL(value);
         return true;
