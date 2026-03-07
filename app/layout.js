@@ -1,3 +1,4 @@
+
 export const metadata = {
   title: "Sangha Registration",
   description: "Sangha Portal Form",

@@ -14,11 +14,7 @@ export async function POST(req) {
     const body = await req.json();
     console.log("Received form data:", body);
 
-    /* =========================
-       🔴 1️⃣ BACKEND VALIDATION
-    ========================== */
-
-    // Required field validation
+    
     if (
       !body.name ||
       !body.phone ||
@@ -32,7 +28,7 @@ export async function POST(req) {
       );
     }
 
-    // Phone number validation (Indian format)
+    
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(body.phone)) {
       return NextResponse.json(
@@ -41,7 +37,7 @@ export async function POST(req) {
       );
     }
 
-    // Duplicate phone check
+    
     const existingUser = await SSData.findOne({ phone: body.phone });
     if (existingUser) {
       return NextResponse.json(
@@ -50,9 +46,6 @@ export async function POST(req) {
       );
     }
 
-    /* =========================
-       2️⃣ SAVE ADDRESS
-    ========================== */
 
     const address = await Address.create({
       address: body.building,
@@ -63,9 +56,7 @@ export async function POST(req) {
       location: body.locationUrl || "",
     });
 
-    /* =========================
-       3️⃣ SAVE PERSONAL DATA
-    ========================== */
+    
 
     const ssData = await SSData.create({
       name: body.name,
@@ -81,9 +72,7 @@ export async function POST(req) {
       currentAddress: address._id,
     });
 
-    /* =========================
-       4️⃣ SAVE SANGH DATA
-    ========================== */
+    
 
     const sanghData = await SanghData.create({
       shakhe: body.milan,
