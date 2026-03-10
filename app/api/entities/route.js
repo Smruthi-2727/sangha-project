@@ -19,13 +19,11 @@ export async function GET(req) {
 
     if (!stharaName) return NextResponse.json([]);
 
-    
     const sthara = await Sthara.findOne({ name: stharaName });
     if (!sthara) return NextResponse.json([]);
 
     let query = { sthara: sthara._id };
 
-    
     if (parentId) {
       const relations = await ParentEntity.find({
         parentEntity: parentId,
@@ -33,7 +31,14 @@ export async function GET(req) {
 
       const childIds = relations.map((rel) => rel.currentEntity);
 
-      
+      // DEBUG LOGS
+      console.log("------ ENTITY FETCH DEBUG ------");
+      console.log("Selected Sthara:", stharaName);
+      console.log("Parent ID:", parentId);
+      console.log("Children IDs:", childIds);
+      console.log("Children Count:", childIds.length);
+      console.log("--------------------------------");
+
       if (childIds.length === 0) {
         return NextResponse.json([]);
       }
@@ -41,7 +46,6 @@ export async function GET(req) {
       query._id = { $in: childIds };
     }
 
-    
     const entities = await Entity.find(query).select("name");
 
     return NextResponse.json(entities);
